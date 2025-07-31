@@ -10,12 +10,12 @@ from upfirdn2d import upfirdn2d
 class FusedLeakyReLU(nn.Module):
     def __init__(self, channel, bias=True):
         super().__init__()
-        self.bias = nn.Parameter(torch.zeros(1, channel, 1, 1)) if bias else None
+        self.bias = nn.Parameter(torch.zeros(channel)) if bias else None
         self.activation = nn.LeakyReLU(0.2)
 
     def forward(self, input):
         if self.bias is not None:
-            return self.activation(input + self.bias)
+            return self.activation(input + self.bias.view(1, -1, 1, 1))
         return self.activation(input)
 
 
